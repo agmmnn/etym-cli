@@ -2,10 +2,21 @@
 import requests
 from urllib.parse import quote
 from bs4 import BeautifulSoup
+import json
 
 from rich.table import Table
 from rich import box
 from rich import print as rprint
+
+
+def req(page, word):
+    url = "https://www.etymonline.com/" + page + quote(word)
+    r = requests.get(url)
+    if r.status_code == 404:
+        rprint("[italic]Word not found.[/italic]")
+        exit()
+    return BeautifulSoup(r.content, "lxml")
+
 
 # plane text output
 def o_plain(secs):
@@ -60,19 +71,36 @@ def o_rich(word, secs, related):
     rprint(table)
 
 
-def main(word, p):
-    url = "https://www.etymonline.com/word/" + quote(word)
-    r = requests.get(url)
-    if r.status_code == 404:
-        rprint("[italic]Word not found.[/italic]")
-        exit()
-    soup = BeautifulSoup(r.content, "lxml")
-    # find all word sections
-    secs = soup.find_all("div", {"class": "word--C9UPa"})
-    # find related word section
-    related = soup.find("ul", {"related__container--22iKI"})
-    # get output
-    if p == True:
-        o_plain(secs)
+# returns trending words
+def o_trend():
+    soup = req("search?q=", "z")
+    t_lst = [
+        i.text for i in soup.find("div", {"trending__normal--2eWJF"}).find_all("li")
+    ]
+    rprint("[bright_cyan]Trending Words:[/bright_cyan]")
+    rprint(", ".join(t_lst))
+
+
+# returns fuzzy search results
+def o_fuzzy(word):
+    soup = req("api/etymology/fuzzy?key=", word)
+    j = json.loads(soup.text)
+    rprint("[wheat4]" + ", ".join(j) + "[/wheat4]")
+
+
+def main(word, p, t, f):
+    if t:
+        o_trend()
+    elif f:
+        o_fuzzy(word)
     else:
-        o_rich(word, secs, related)
+        soup = req("word/", word)
+        # find all word sections
+        secs = soup.find_all("div", {"class": "word--C9UPa"})
+        # find related word section
+        related = soup.find("ul", {"related__container--22iKI"})
+        # get output
+        if p == True:
+            o_plain(secs)
+        else:
+            o_rich(word, secs, related)
