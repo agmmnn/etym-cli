@@ -1,9 +1,7 @@
 ![screenshot](https://raw.githubusercontent.com/agmmnn/etym-cli/master/imgs/ss.png)
 
-<center>
 <a href="https://pypi.org/project/etym-cli/">
 <img alt="PyPI" src="https://img.shields.io/pypi/v/etym-cli"></a>
-</center>
 
 Command-line tool for [etymonline.com](https://www.etymonline.com/), the Online Etymology Dictionary with rich output.
 
@@ -29,7 +27,7 @@ etym lawyer
 
 ### Arguments
 
-```shell
+```
 -p, --plain plain text output
 $ etym -p lawyer
 lawyer (n.)
