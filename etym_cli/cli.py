@@ -2,7 +2,6 @@
 import requests
 from urllib.parse import quote
 from bs4 import BeautifulSoup
-from html import unescape
 import json
 
 from rich.table import Table
