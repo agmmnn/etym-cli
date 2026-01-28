@@ -103,8 +103,8 @@ def main(word, p, t, f):
         o_fuzzy(word)
     else:
         soup = req("word/", word)
-        secs = soup.find_all("section")
-        related = soup.find("ul", class_="related__container--22iKI")
+        secs = soup.find_all("section", class_="prose-lg")
+        related = soup.select_one("ul.list-none.flex.gap-2.flex-wrap")
         if p:
             o_plain(secs)
         else:
