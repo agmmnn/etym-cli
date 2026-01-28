@@ -8,3 +8,5 @@ dist
 *.spec
 *.manifest
 *.egg-info
+.pytest_cache
+.venv
